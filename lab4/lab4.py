@@ -44,20 +44,26 @@ def draw_filled_circles(radius, sides, vertical_scale):
 
 
 def main():
+    # Инициализация Pygame
     pygame.init()
+
+    # Установка режима отображения и перспективы
     display = (800, 600)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
     gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
     glTranslatef(0.0, 0.0, -5)
+
+    # Настройка света и материала
     glEnable(GL_LIGHTING)
     glEnable(GL_DEPTH_TEST)
     glLightfv(GL_LIGHT0, GL_POSITION, [0, 1, 0, 3])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
     glEnable(GL_LIGHT0)
-    glMaterial(GL_FRONT, GL_DIFFUSE, [0.0, 0.0, 1.0, 1.0])  # Blue material for the sphere
+    glMaterial(GL_FRONT, GL_DIFFUSE, [0.0, 0.0, 1.0, 1.0])  # Синий материал для сферы
 
-    vertical_scale = 2.0  # Adjust the vertical scaling factor as needed
-    clip_height = 1.2  # Adjust the clip height as needed
+    # Параметры отсечения
+    vertical_scale = 2.0
+    clip_height = 1.2
 
     while True:
         for event in pygame.event.get():
@@ -65,21 +71,25 @@ def main():
                 pygame.quit()
                 quit()
 
+        # Вращение сцены
         glRotatef(1, 3, 1, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+        # Включение и настройка отсечения
         glEnable(GL_CLIP_PLANE0)
         glClipPlane(GL_CLIP_PLANE0, (0, 0, 1, clip_height))
-
         glEnable(GL_CLIP_PLANE1)
         glClipPlane(GL_CLIP_PLANE1, (0, 0, -1, clip_height))
 
+        # Отрисовка сферы с отсечением и кругов
         draw_clipped_sphere(1, 20, vertical_scale)
         draw_filled_circles(1, 20, vertical_scale)
 
+        # Отключение отсечения
         glDisable(GL_CLIP_PLANE0)
         glDisable(GL_CLIP_PLANE1)
 
+        # Обновление экрана
         pygame.display.flip()
         pygame.time.wait(10)
 
